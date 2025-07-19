@@ -170,9 +170,11 @@ dash_after_image = ExtResource("3_qhqgy")
 
 [node name="animation" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_dqkch")
-animation = &"idle_left"
+animation = &"idle_down"
 autoplay = "idle_down"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 4.5)
 shape = SubResource("RectangleShape2D_qlg0r")
+
+[connection signal="ready" from="." to="." method="_on_ready"]

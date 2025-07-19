@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=4 uid="uid://cabdkoqe2jr6x"]
+[gd_scene load_steps=11 format=4 uid="uid://cabdkoqe2jr6x"]
 
 [ext_resource type="Texture2D" uid="uid://bp6wos2144hgt" path="res://assets/backgrounds/water.png" id="1_lnu2h"]
 [ext_resource type="Texture2D" uid="uid://daeyruqa7h3sr" path="res://assets/backgrounds/grass.png" id="1_uwrxv"]
 [ext_resource type="PackedScene" uid="uid://raa5v6enxegh" path="res://scenes/player.tscn" id="2_yqjtg"]
+[ext_resource type="PackedScene" uid="uid://qes1i4etj34q" path="res://scenes/small_mineable_resource.tscn" id="4_lbhrr"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lnu2h"]
 texture = ExtResource("1_lnu2h")
@@ -210,8 +211,22 @@ tile_set = SubResource("TileSet_lnu2h")
 [node name="BitsOnTerrain" type="TileMapLayer" parent="Map"]
 tile_set = SubResource("TileSet_iywne")
 
-[node name="player" parent="." instance=ExtResource("2_yqjtg")]
+[node name="Player" parent="." instance=ExtResource("2_yqjtg")]
 
-[node name="Camera2D" type="Camera2D" parent="player"]
+[node name="Camera2D" type="Camera2D" parent="Player"]
 zoom = Vector2(2.4, 2.4)
 limit_smoothed = true
+
+[node name="Minerals" type="Node" parent="."]
+
+[node name="SmallMineableResource2" parent="Minerals" instance=ExtResource("4_lbhrr")]
+position = Vector2(-32, 96)
+
+[node name="SmallMineableResource" parent="Minerals" instance=ExtResource("4_lbhrr")]
+position = Vector2(85, 109)
+
+[node name="SmallMineableResource3" parent="Minerals" instance=ExtResource("4_lbhrr")]
+position = Vector2(155, 56)
+
+[node name="SmallMineableResource4" parent="Minerals" instance=ExtResource("4_lbhrr")]
+position = Vector2(232, 31)

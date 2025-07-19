@@ -1,0 +1,79 @@
+[gd_scene load_steps=8 format=3 uid="uid://qes1i4etj34q"]
+
+[ext_resource type="Script" uid="uid://c0krovpoq67ti" path="res://scripts/small_mineable_resource.gd" id="1_q3w1o"]
+[ext_resource type="Texture2D" uid="uid://j2xu5en2abt4" path="res://assets/resources/resources_basic.png" id="1_xwoty"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xwoty"]
+atlas = ExtResource("1_xwoty")
+region = Rect2(96, 72, 24, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_q3w1o"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xwoty")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_657q7"]
+radius = 6.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xwoty"]
+radius = 11.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q3w1o"]
+bg_color = Color(0.725174, 0.756455, 0.800301, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[node name="SmallMineableResource" type="StaticBody2D"]
+z_index = 4
+script = ExtResource("1_q3w1o")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_q3w1o")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+z_index = 5
+position = Vector2(-1, 2)
+shape = SubResource("CircleShape2D_657q7")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_xwoty")
+
+[node name="Popup" type="Panel" parent="."]
+visible = false
+z_index = 6
+offset_left = -9.0
+offset_top = -26.0
+offset_right = 7.0
+offset_bottom = -10.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_q3w1o")
+
+[node name="Label" type="Label" parent="Popup"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 17.0
+offset_bottom = 16.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 10
+text = "X"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]

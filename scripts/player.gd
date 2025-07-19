@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 
-const SPEED = 250.0
+const SPEED := 250.0
 @onready var animation: AnimatedSprite2D = $animation
 var last_direction := Vector2.DOWN
 
@@ -14,9 +14,16 @@ var is_dashing := false
 
 @export var dash_after_image: PackedScene
 
+# Stats
+var attack_speed := 2
+var attack_cooldown_timer := 0.0
+var is_attacking := false
+var damage := 1
+
+# Interactables
+var nearby_mineable_resource: StaticBody2D = null
 
 func _physics_process(delta: float) -> void:
-	
 	# Move
 	var input_vector := Vector2(
 		Input.get_axis("move_left", "move_right"),
@@ -45,6 +52,14 @@ func _physics_process(delta: float) -> void:
 		_play_walk_animation(input_vector)
 	else:
 		_play_idle_animation(last_direction)
+	
+	# Attacks
+	# TODO: Fix building interaction
+	# TODO: Attack direction
+	if attack_cooldown_timer > 0:
+		attack_cooldown_timer -= delta
+	if Input.is_action_just_pressed("action") and attack_cooldown_timer <= 0:
+		perform_attack()
 
 func _play_walk_animation(dir: Vector2) -> void:
 	if abs(dir.x) > abs(dir.y):
@@ -76,3 +91,18 @@ func spawn_afterimage():
 	afterimage.z_index = self.z_index - 1
 
 	get_tree().current_scene.add_child(afterimage)
+
+
+func _on_ready() -> void:
+	Globals.player = self
+
+func perform_attack():
+	is_attacking = true
+	var did_hit_something := false
+	
+	if nearby_mineable_resource != null:
+		nearby_mineable_resource.apply_damage(damage)
+		did_hit_something = true
+	
+	if did_hit_something:
+		attack_cooldown_timer = 1.0 / attack_speed
