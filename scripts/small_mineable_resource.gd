@@ -57,9 +57,10 @@ func apply_damage(amount: int) -> void:
 
 func spawn_pickups():
 	var rng = RandomNumberGenerator.new()
+	rng.randomize()
 	
-	var drop_count := rng.randf_range(2, 4)
-	for i in drop_count:
+	var drop_count := rng.randi_range(2, 4)
+	for i in range(drop_count):
 		var pickup = pickup_scene.instantiate() as Area2D
 
 		# Random offset around the rock

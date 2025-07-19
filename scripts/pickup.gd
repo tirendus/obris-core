@@ -23,6 +23,13 @@ func _ready() -> void:
 	monitoring = true
 
 func _physics_process(delta: float) -> void:
+	if vacuuming and target:
+		var direction = (target.global_position - global_position).normalized()
+		global_position += direction * speed * delta
+
+		if global_position.distance_to(target.global_position) <= pickup_radius:
+			_on_reach_player()
+
 	if not landed:
 		velocity.y += gravity * delta
 		global_position += velocity * delta
@@ -46,14 +53,7 @@ func _on_body_entered(body: Node2D) -> void:
 		set_deferred("monitoring", false)
 		set_collision_layer(0)
 		set_collision_mask(0)
-
-func _process(delta: float) -> void:
-	if vacuuming and target:
-		var direction = (target.global_position - global_position).normalized()
-		global_position += direction * speed * delta
-
-		if global_position.distance_to(target.global_position) <= pickup_radius:
-			_on_reach_player()
+	
 
 func _on_reach_player() -> void:
 	# Add to inventory or similar logic here

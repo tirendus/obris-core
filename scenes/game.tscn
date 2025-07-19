@@ -224,6 +224,18 @@ position_smoothing_enabled = true
 [node name="SmallMineableResource2" parent="Minerals" instance=ExtResource("4_lbhrr")]
 position = Vector2(-32, 96)
 
+[node name="SmallMineableResource5" parent="Minerals" instance=ExtResource("4_lbhrr")]
+position = Vector2(32, 80)
+
+[node name="SmallMineableResource6" parent="Minerals" instance=ExtResource("4_lbhrr")]
+position = Vector2(-45, 44)
+
+[node name="SmallMineableResource7" parent="Minerals" instance=ExtResource("4_lbhrr")]
+position = Vector2(139, -31)
+
+[node name="SmallMineableResource8" parent="Minerals" instance=ExtResource("4_lbhrr")]
+position = Vector2(-98, -57)
+
 [node name="SmallMineableResource" parent="Minerals" instance=ExtResource("4_lbhrr")]
 position = Vector2(85, 109)
 
