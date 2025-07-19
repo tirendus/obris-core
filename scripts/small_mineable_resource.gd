@@ -3,6 +3,7 @@ extends StaticBody2D
 @onready var area_2d: Area2D = $Area2D
 @onready var popup: Panel = $Popup
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
+@export var pickup_scene: PackedScene
 
 var max_hp := 3
 var current_hp: int
@@ -51,4 +52,24 @@ func apply_damage(amount: int) -> void:
 	handle_attacked()
 	if current_hp <= 0:
 		# TODO: Disappears immediately on last hit, wait for the animation to finish
+		spawn_pickups()
 		queue_free()
+
+func spawn_pickups():
+	var rng = RandomNumberGenerator.new()
+	
+	var drop_count := rng.randf_range(2, 4)
+	for i in drop_count:
+		var pickup = pickup_scene.instantiate() as Area2D
+
+		# Random offset around the rock
+		var offset = Vector2(
+			randf_range(-16, 16),
+			randf_range(-16, 16)
+		)
+
+		pickup.global_position = global_position + offset
+		get_tree().current_scene.add_child(pickup)
+
+
+	
