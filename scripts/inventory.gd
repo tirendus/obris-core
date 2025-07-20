@@ -9,7 +9,12 @@ func add_item(item_name: String, amount: int = 1) -> void:
 		items[item_name] += amount
 	else:
 		items[item_name] = amount
-	print('iron ore', items['iron_ore'])
+	var format_string = "Stone: {stone}. Iron: {iron}. Wood: {wood}."
+	Globals.player.get_node("Label").text = format_string.format({
+		"stone": str(items.get(Globals.STONE_PICKUP, 0)),
+		"iron": str(items.get(Globals.IRON_PICKUP, 0)),
+		"wood": str(items.get(Globals.WOOD_PICKUP, 0)),
+	})
 
 func remove_item(item_name: String, amount: int = 1) -> void:
 	if items.has(item_name):

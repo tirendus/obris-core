@@ -1,22 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://cmi585ht7qf"]
+[gd_scene load_steps=4 format=3 uid="uid://cmi585ht7qf"]
 
 [ext_resource type="Script" uid="uid://dgx2s6haxdfql" path="res://scripts/pickup.gd" id="1_7cqbe"]
-[ext_resource type="Texture2D" uid="uid://j2xu5en2abt4" path="res://assets/resources/resources_basic.png" id="2_gyxxy"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_4m06l"]
-atlas = ExtResource("2_gyxxy")
-region = Rect2(96, 96, 24, 24)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_hqyie"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_4m06l")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
+[ext_resource type="Texture2D" uid="uid://o7devgqmokie" path="res://assets/trees/wood_pickup.png" id="2_7cqbe"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_t0qhb"]
 radius = 28.0179
@@ -25,9 +10,8 @@ radius = 28.0179
 z_index = 4
 script = ExtResource("1_7cqbe")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-scale = Vector2(0.5, 0.5)
-sprite_frames = SubResource("SpriteFrames_hqyie")
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_7cqbe")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_t0qhb")

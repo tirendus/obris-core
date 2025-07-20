@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://rycgdo4lshd5"]
+
+[ext_resource type="PackedScene" uid="uid://bwl151vyp4qoe" path="res://scenes/base/harvestable_resource.tscn" id="1_buia2"]
+[ext_resource type="Script" uid="uid://bha1gniwxts1k" path="res://scripts/minerals/small_stone_node.gd" id="2_ghvy5"]
+[ext_resource type="Texture2D" uid="uid://bl3aqtroqc6nt" path="res://assets/minerals/stone_node.png" id="2_xbbju"]
+
+[node name="SmallStoneNode" instance=ExtResource("1_buia2")]
+script = ExtResource("2_ghvy5")
+
+[node name="Sprite2D" parent="." index="0"]
+texture = ExtResource("2_xbbju")
+
+[node name="CollisionShape2D" parent="." index="1"]
+position = Vector2(-1, 1)
+
+[node name="MouseOverArea2D" parent="." index="2"]
+position = Vector2(4, 1)
+
+[node name="CollisionShape2D" parent="MouseOverArea2D" index="0"]
+position = Vector2(-5, -1)

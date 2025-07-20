@@ -1,12 +1,12 @@
 extends Area2D
-
-@onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
+class_name Pickup
 @onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
 
+var pickup_name: String
 var vacuuming := false
 var target: Node2D = null
 var speed := 200.0
-var pickup_radius := 10.0
+var pickup_radius := 15.0
 
 var velocity := Vector2.ZERO
 var landed := false
@@ -57,5 +57,5 @@ func _on_body_entered(body: Node2D) -> void:
 
 func _on_reach_player() -> void:
 	# Add to inventory or similar logic here
-	PlayerInventory.add_item('iron_ore')
+	PlayerInventory.add_item(pickup_name)
 	queue_free()

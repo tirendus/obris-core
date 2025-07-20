@@ -1,0 +1,32 @@
+[gd_scene load_steps=6 format=3 uid="uid://bwl151vyp4qoe"]
+
+[ext_resource type="Script" uid="uid://dba5l5aq234pl" path="res://scripts/base/harvestable_resource.gd" id="1_i01ys"]
+[ext_resource type="Script" uid="uid://cs1jpxocmstpv" path="res://scenes/base/mouse_over_area_2d.gd" id="2_k6b7s"]
+[ext_resource type="Script" uid="uid://dxhbivx713quu" path="res://scripts/components/damageable.gd" id="2_vpwhi"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_0c1c0"]
+radius = 6.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_l5qqj"]
+radius = 10.0499
+
+[node name="HarvestableResource" type="StaticBody2D"]
+script = ExtResource("1_i01ys")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_0c1c0")
+
+[node name="MouseOverArea2D" type="Area2D" parent="."]
+script = ExtResource("2_k6b7s")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MouseOverArea2D"]
+shape = SubResource("CircleShape2D_l5qqj")
+
+[node name="Damageable" type="Node" parent="."]
+script = ExtResource("2_vpwhi")
+metadata/_custom_type_script = "uid://dxhbivx713quu"
+
+[connection signal="mouse_entered" from="MouseOverArea2D" to="." method="_on_area_2d_mouse_entered"]
+[connection signal="mouse_exited" from="MouseOverArea2D" to="." method="_on_area_2d_mouse_exited"]

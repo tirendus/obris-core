@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://raa5v6enxegh"]
+[gd_scene load_steps=23 format=3 uid="uid://raa5v6enxegh"]
 
 [ext_resource type="Texture2D" uid="uid://cj0yefiv8hevk" path="res://assets/characters/character.png" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://bf7duncwlqgcp" path="res://scripts/player.gd" id="1_g2els"]
@@ -162,13 +162,14 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qlg0r"]
 size = Vector2(8, 5)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_qhqgy"]
+
 [node name="player" type="CharacterBody2D"]
-z_index = 5
-motion_mode = 1
 script = ExtResource("1_g2els")
 dash_after_image = ExtResource("3_qhqgy")
 
 [node name="animation" type="AnimatedSprite2D" parent="."]
+scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_dqkch")
 animation = &"idle_down"
 autoplay = "idle_down"
@@ -176,5 +177,11 @@ autoplay = "idle_down"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 4.5)
 shape = SubResource("RectangleShape2D_qlg0r")
+
+[node name="AttackRange" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackRange"]
+scale = Vector2(6, 6)
+shape = SubResource("CircleShape2D_qhqgy")
 
 [connection signal="ready" from="." to="." method="_on_ready"]

@@ -1,27 +1,29 @@
 extends CharacterBody2D
+class_name Player
 
-
-const SPEED := 250.0
+const LaserBeam = preload("res://scenes/player/mining_laser.tscn")
 @onready var animation: AnimatedSprite2D = $animation
-var last_direction := Vector2.DOWN
+@onready var attack_range: Area2D = $AttackRange
 
-const DASH_SPEED = 800.0
-const DASH_DURATION = 0.15
+# Movement
+const SPEED := 150.0
+const DASH_SPEED = SPEED * 3
+const DASH_DURATION = 0.167
 const DASH_COOLDOWN = 0.4
+var last_direction := Vector2.DOWN
 var dash_timer := 0.0
 var dash_cooldown_timer := 0.0
 var is_dashing := false
-
 @export var dash_after_image: PackedScene
 
 # Stats
-var attack_speed := 2
+var attacks_per_second := 2
 var attack_cooldown_timer := 0.0
-var is_attacking := false
 var damage := 1
 
 # Interactables
-var nearby_mineable_resource: StaticBody2D = null
+var harvesting_resource: HarvestableResource = null
+var mining_laser: MiningLaser = null
 
 func _physics_process(delta: float) -> void:
 	# Move
@@ -30,6 +32,11 @@ func _physics_process(delta: float) -> void:
 		Input.get_axis("move_up", "move_down")
 	).normalized()
 	velocity = input_vector * SPEED
+	
+	if mining_laser and harvesting_resource:
+		var start_pos = global_position
+		var end_pos = harvesting_resource.get_node("CollisionShape2D").global_position
+		mining_laser.setup(start_pos, end_pos)
 	
 	# Dash
 	if dash_cooldown_timer > 0:
@@ -54,12 +61,13 @@ func _physics_process(delta: float) -> void:
 		_play_idle_animation(last_direction)
 	
 	# Attacks
-	# TODO: Fix building interaction
-	# TODO: Attack direction
 	if attack_cooldown_timer > 0:
 		attack_cooldown_timer -= delta
-	if Input.is_action_just_pressed("action") and attack_cooldown_timer <= 0:
+	if Input.is_action_pressed("attack") and attack_cooldown_timer <= 0:
 		perform_attack()
+	if (!harvesting_resource or Input.is_action_just_released("attack")) and mining_laser:
+		mining_laser.queue_free()
+		mining_laser = null
 
 func _play_walk_animation(dir: Vector2) -> void:
 	if abs(dir.x) > abs(dir.y):
@@ -80,29 +88,45 @@ func start_dash():
 
 func spawn_afterimage():
 	var afterimage = dash_after_image.instantiate() as Sprite2D
-	afterimage.global_position = global_position
-	
 	var frame_texture = animation.sprite_frames.get_frame_texture(animation.animation, animation.frame)
 	afterimage.texture = frame_texture
-	
-	# Match visual settings
+	afterimage.global_position = global_position
 	afterimage.flip_h = animation.flip_h
 	afterimage.scale = animation.scale
-	afterimage.z_index = self.z_index - 1
-
 	get_tree().current_scene.add_child(afterimage)
-
 
 func _on_ready() -> void:
 	Globals.player = self
 
 func perform_attack():
-	is_attacking = true
 	var did_hit_something := false
 	
-	if nearby_mineable_resource != null:
-		nearby_mineable_resource.apply_damage(damage)
-		did_hit_something = true
+	if harvesting_resource != null:
+		var overlapping = attack_range.get_overlapping_bodies()
+		if harvesting_resource in overlapping:
+			harvesting_resource.damageable.apply_damage(damage)
+			did_hit_something = true
+			if mining_laser == null:
+				mining_laser = LaserBeam.instantiate()
+				get_tree().current_scene.add_child(mining_laser)
+			
+			var start_pos = global_position
+			var end_pos = harvesting_resource.get_node("CollisionShape2D").global_position
+			mining_laser.setup(start_pos, end_pos)
+		else:
+			print("Target is out of range.")
+			if mining_laser != null:
+				mining_laser.queue_free()
+				mining_laser = null
 	
+	# TODO: Fizzle animation and always cooldown
 	if did_hit_something:
-		attack_cooldown_timer = 1.0 / attack_speed
+		attack_cooldown_timer = 1.0 / attacks_per_second
+
+func resource_focused(resource: HarvestableResource):
+	#if harvesting_resource == null or not Input.is_action_pressed("attack"):
+	harvesting_resource = resource
+	
+func resource_unfocused(resource: HarvestableResource):
+	if not Input.is_action_pressed("attack") and harvesting_resource == resource:
+		harvesting_resource = null

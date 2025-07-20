@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://bmrigvhlf6to4"]
+
+[ext_resource type="PackedScene" uid="uid://bwl151vyp4qoe" path="res://scenes/base/harvestable_resource.tscn" id="1_d0rth"]
+[ext_resource type="Texture2D" uid="uid://bpgkepk1fq8kx" path="res://assets/trees/tree1.png" id="2_m4muj"]
+[ext_resource type="Script" uid="uid://4bawmbywbw71" path="res://scripts/trees/harvestable_tree_node.gd" id="2_mlfxn"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mlfxn"]
+radius = 17.0
+height = 42.0
+
+[node name="HarvestableTreeNode" instance=ExtResource("1_d0rth")]
+script = ExtResource("2_mlfxn")
+
+[node name="Sprite2D" parent="." index="0"]
+texture = ExtResource("2_m4muj")
+
+[node name="CollisionShape2D" parent="." index="1"]
+position = Vector2(0, 13)
+
+[node name="CollisionShape2D" parent="MouseOverArea2D" index="0"]
+position = Vector2(0, -2)
+shape = SubResource("CapsuleShape2D_mlfxn")

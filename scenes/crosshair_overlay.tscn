@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bjst3bqqgxfdj"]
+
+[ext_resource type="Script" uid="uid://bx5ddigm20fjs" path="res://scripts/components/crosshair_overlay.gd" id="1_xnepy"]
+
+[node name="CrosshairOverlay" type="Node2D"]
+script = ExtResource("1_xnepy")
