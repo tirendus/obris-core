@@ -33,10 +33,13 @@ func _physics_process(delta: float) -> void:
 	).normalized()
 	velocity = input_vector * SPEED
 	
-	if mining_laser and harvesting_resource:
+	if mining_laser and harvesting_resource and _is_in_attack_range(harvesting_resource):
 		var start_pos = global_position
 		var end_pos = harvesting_resource.get_node("CollisionShape2D").global_position
 		mining_laser.setup(start_pos, end_pos)
+	elif mining_laser:
+		mining_laser.queue_free()
+		mining_laser = null
 	
 	# Dash
 	if dash_cooldown_timer > 0:
@@ -95,29 +98,31 @@ func spawn_afterimage():
 	afterimage.scale = animation.scale
 	get_tree().current_scene.add_child(afterimage)
 
-func _on_ready() -> void:
+func _ready() -> void:
 	Globals.player = self
+	
+func _is_in_attack_range(body_to_check: Node2D):
+	var overlapping = attack_range.get_overlapping_bodies()
+	return harvesting_resource in overlapping
 
 func perform_attack():
 	var did_hit_something := false
 	
-	if harvesting_resource != null:
-		var overlapping = attack_range.get_overlapping_bodies()
-		if harvesting_resource in overlapping:
-			harvesting_resource.damageable.apply_damage(damage)
-			did_hit_something = true
-			if mining_laser == null:
-				mining_laser = LaserBeam.instantiate()
-				get_tree().current_scene.add_child(mining_laser)
-			
-			var start_pos = global_position
-			var end_pos = harvesting_resource.get_node("CollisionShape2D").global_position
-			mining_laser.setup(start_pos, end_pos)
-		else:
-			print("Target is out of range.")
-			if mining_laser != null:
-				mining_laser.queue_free()
-				mining_laser = null
+	if harvesting_resource != null and _is_in_attack_range(harvesting_resource):
+		harvesting_resource.damageable.apply_damage(damage)
+		did_hit_something = true
+		if mining_laser == null:
+			mining_laser = LaserBeam.instantiate()
+			get_tree().current_scene.add_child(mining_laser)
+		
+		var start_pos = global_position
+		var end_pos = harvesting_resource.get_node("CollisionShape2D").global_position
+		mining_laser.setup(start_pos, end_pos)
+	else:
+		print("Target is out of range.")
+		if mining_laser != null:
+			mining_laser.queue_free()
+			mining_laser = null
 	
 	# TODO: Fizzle animation and always cooldown
 	if did_hit_something:
